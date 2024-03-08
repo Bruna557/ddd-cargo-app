@@ -7,20 +7,7 @@ from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.booking_service import BookingService
 from cargo_shipping.infrastructure.persistence.repository import Repository
-
-
-class FakeCargoRepository(Repository):
-    def __init__(self) -> None:
-        self.cargos = defaultdict()
-
-    def save(self, cargo: Cargo) -> None:
-        self.cargos[cargo.id] = cargo
-
-    def get_by_id(self, id: str) -> Entity:
-        return self.find_by_tracking_id(id)
-
-    def find_by_tracking_id(self, tracking_id: str) -> Cargo:
-        return self.cargos[tracking_id]
+from tests.unit.mocks import FakeCargoRepository
 
 
 class TestBookingService:

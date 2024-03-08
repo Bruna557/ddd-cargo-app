@@ -1,11 +1,6 @@
-from collections import defaultdict
 from datetime import datetime
 
-from cargo_shipping.domain.model.cargo.cargo import Cargo
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
-from cargo_shipping.domain.model.carrier.carrier_movement import (
-    CarrierMovement,
-)
 from cargo_shipping.domain.model.handling.handling_event import (
     HandlingActivity,
 )
@@ -14,36 +9,7 @@ from cargo_shipping.domain.model.handling.handling_event_factory import (
 )
 from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.loading_service import LoadingService
-from cargo_shipping.infrastructure.persistence.repository import Repository
-
-
-class FakeCargoRepository(Repository):
-    def __init__(self) -> None:
-        self.cargos = defaultdict()
-
-    def save(self, cargo: Cargo) -> None:
-        self.cargos[cargo.id] = cargo
-
-    def get_by_id(self, id: str) -> Cargo:
-        return self.find_by_tracking_id(id)
-
-    def find_by_tracking_id(self, tracking_id: str) -> Cargo:
-        return self.cargos[tracking_id]
-
-
-class FakeCarrierMovementRepository(Repository):
-    def __init__(self) -> None:
-        self.carrier_movements = defaultdict()
-
-    def save(self, carrier_movement: CarrierMovement) -> None:
-        self.carrier_movements[carrier_movement.id] = carrier_movement
-
-    # helper for testing
-    def get_all(self) -> defaultdict:
-        return list(self.carrier_movements.values())
-
-    def get_by_id(self, id: str) -> CarrierMovement:
-        return self.carrier_movements[id]
+from tests.unit.mocks import FakeCargoRepository, FakeCarrierMovementRepository
 
 
 class TestLoadingService:
@@ -70,7 +36,7 @@ class TestLoadingService:
             tracking_id, departure_location, arrival_location, time_stamp
         )
 
-        cargo = cargo_repository.get_by_id(tracking_id)
+        cargo = cargo_repository.find_by_tracking_id(tracking_id)
         handling_event = cargo.delivery_history.handling_events[0]
         carrier_movement = carrier_movement_repository.get_all()[0]
         assert handling_event.type == HandlingActivity.LOADING
