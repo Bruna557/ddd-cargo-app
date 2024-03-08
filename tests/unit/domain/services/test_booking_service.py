@@ -1,12 +1,12 @@
 from collections import defaultdict
 from datetime import datetime
 
-from source.domain.model.base.entity import Entity
-from source.domain.model.cargo.cargo import Cargo
-from source.domain.model.cargo.cargo_factory import CargoFactory
-from source.domain.model.location.location import Location
-from source.domain.services.booking_service import BookingService
-from source.infrastructure.persistence.repository import Repository
+from cargo_shipping.domain.model.base.entity import Entity
+from cargo_shipping.domain.model.cargo.cargo import Cargo
+from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
+from cargo_shipping.domain.model.location.location import Location
+from cargo_shipping.domain.services.booking_service import BookingService
+from cargo_shipping.infrastructure.persistence.repository import Repository
 
 
 class FakeCargoRepository(Repository):

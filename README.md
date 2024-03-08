@@ -14,6 +14,6 @@ pytest
 ```
 
 ## Todo
-[] pymongo
-[] fast api
-[] configure git pre-commit hooks, code quality and coverage
+- [] pymongo
+- [] fast api
+- [] configure git pre-commit hooks, code quality and coverage
