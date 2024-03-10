@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
+from cargo_shipping.domain.model.handling.handling_event_factory import (
+    HandlingEventFactory,
+)
 from cargo_shipping.infrastructure.persistence import (
     cargo_repository,
     database,
@@ -14,7 +17,8 @@ router = APIRouter(
 
 
 db = database.get_database()
-cargo_factory = CargoFactory()
+handling_event_factory = HandlingEventFactory()
+cargo_factory = CargoFactory(handling_event_factory)
 repository = cargo_repository.CargoRepository(db["booking"], cargo_factory)
 
 
@@ -27,4 +31,9 @@ async def get_location(tracking_id: str):
 @router.get("/history")
 async def get_history(tracking_id: str):
     cargo = repository.find_by_tracking_id(tracking_id)
-    return {"history": cargo.delivery_history.handling_events}
+    return {
+        "history": [
+            handling_event.to_dict()
+            for handling_event in cargo.delivery_history.handling_events
+        ]
+    }

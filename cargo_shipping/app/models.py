@@ -2,25 +2,21 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from cargo_shipping.domain.model.handling.handling_event import (
-    HandlingActivity,
-)
 
-
-class Location(BaseModel):
-    name: str
+class LocationRequest(BaseModel):
     code: str
+    name: str
 
 
 class BookingRequest(BaseModel):
     tracking_id: str
-    destination: Location
+    destination: LocationRequest
     deadline: datetime
 
 
 class HandlingEventRequest(BaseModel):
     tracking_id: str
-    departure_location: Location
-    arrival_location: Location
+    departure_location: LocationRequest
+    arrival_location: LocationRequest
     time_stamp: datetime
-    handling_activity: HandlingActivity
+    handling_activity: str

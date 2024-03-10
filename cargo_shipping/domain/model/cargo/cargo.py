@@ -15,3 +15,11 @@ class Cargo(Aggregate):
         Aggregate.__init__(self, id)
         self.delivery_history = DeliveryHistory()
         self.delivery_specification = None
+
+    def to_dict(self) -> dict:
+        dict_ = {
+            "id": self.id,
+            "delivery_specification": self.delivery_specification.to_dict(),
+            "delivery_history": self.delivery_history.to_dict(),
+        }
+        return dict_

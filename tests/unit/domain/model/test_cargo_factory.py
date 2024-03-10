@@ -4,7 +4,11 @@ from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.cargo.delivery_specification import (
     DeliverySpecification,
 )
+from cargo_shipping.domain.model.handling.handling_event_factory import (
+    HandlingEventFactory,
+)
 from cargo_shipping.domain.model.location.location import Location
+from tests import utils
 
 
 class TestCargoFactory:
@@ -12,13 +16,13 @@ class TestCargoFactory:
         """
         1. Prepare
         """
-        # instantiate classes
-        factory = CargoFactory()
+        factory = CargoFactory(HandlingEventFactory())
 
-        # declare variables
-        id = "TEST_ID"
-        destination = Location("TEST_LOCATION", "TEST_CODE")
-        deadline = datetime.now()
+        id = utils.random_string()
+        destination_code = utils.random_string()
+        destination_name = utils.random_string()
+        destination = Location(destination_code, destination_name)
+        deadline = utils.random_datetime()
 
         """
         2. Execute
@@ -38,33 +42,31 @@ class TestCargoFactory:
         """
         1. Prepare
         """
-        # instantiate classes
-        factory = CargoFactory()
+        factory = CargoFactory(HandlingEventFactory())
 
-        # declare variables
-        cargo_id = "TEST_CARGO_ID"
-        delivery_history_id = "TEST_HISTORY_ID"
-        destination_name = "TEST_LOCATION"
-        destination_code = "TEST_CODE"
-        deadline = datetime.now()
+        cargo_id = utils.random_string()
+        destination_name = utils.random_string()
+        destination_code = utils.random_string()
+        deadline = utils.random_datetime()
+        delivery_history_id = utils.random_string()
         loading_event_type = "LOADING"
-        loading_event_completion_time = datetime.now()
-        loading_carrier_movement_id = "LID"
+        loading_event_completion_time = utils.random_datetime()
+        loading_carrier_movement_id = utils.random_string()
         unloading_event_type = "UNLOADING"
-        unloading_event_completion_time = datetime.now()
-        unloading_carrier_movement_id = "UID"
-        departure_location_name = "DEPARTURE"
-        departure_location_code = "DCODE"
-        departure_time = datetime.now()
-        arrival_location_name = "ARRIVAL"
-        arrival_location_code = "ACODE"
-        arrival_time = datetime.now()
+        unloading_event_completion_time = utils.random_datetime()
+        unloading_carrier_movement_id = utils.random_string()
+        departure_location_code = utils.random_string()
+        departure_location_name = utils.random_string()
+        arrival_location_name = utils.random_string()
+        arrival_location_code = utils.random_string()
+        departure_time = utils.random_datetime()
+        arrival_time = utils.random_datetime()
         cargo_dict = {
             "id": cargo_id,
             "delivery_specification": {
                 "destination": {
-                    "name": destination_name,
                     "code": destination_code,
+                    "name": destination_name,
                 },
                 "deadline": deadline,
             },
@@ -77,12 +79,12 @@ class TestCargoFactory:
                         "carrier_movement": {
                             "id": loading_carrier_movement_id,
                             "departure_location": {
-                                "name": departure_location_name,
                                 "code": departure_location_code,
+                                "name": departure_location_name,
                             },
                             "arrival_location": {
-                                "name": arrival_location_name,
                                 "code": arrival_location_code,
+                                "name": arrival_location_name,
                             },
                             "departure_time": departure_time,
                             "arrival_time": arrival_time,
@@ -119,10 +121,10 @@ class TestCargoFactory:
         """
         assert cargo.id == cargo_id
         assert (
-            cargo.delivery_specification.destination.name == destination_name
+            cargo.delivery_specification.destination.code == destination_code
         )
         assert (
-            cargo.delivery_specification.destination.code == destination_code
+            cargo.delivery_specification.destination.name == destination_name
         )
         assert cargo.delivery_specification.deadline == deadline
         assert cargo.delivery_history.id == delivery_history_id
@@ -141,26 +143,26 @@ class TestCargoFactory:
         assert (
             cargo.delivery_history.handling_events[
                 0
-            ].carrier_movement.departure_location.name
-            == departure_location_name
-        )
-        assert (
-            cargo.delivery_history.handling_events[
-                0
             ].carrier_movement.departure_location.code
             == departure_location_code
         )
         assert (
             cargo.delivery_history.handling_events[
                 0
-            ].carrier_movement.arrival_location.name
-            == arrival_location_name
+            ].carrier_movement.departure_location.name
+            == departure_location_name
         )
         assert (
             cargo.delivery_history.handling_events[
                 0
             ].carrier_movement.arrival_location.code
             == arrival_location_code
+        )
+        assert (
+            cargo.delivery_history.handling_events[
+                0
+            ].carrier_movement.arrival_location.name
+            == arrival_location_name
         )
         assert (
             cargo.delivery_history.handling_events[
@@ -189,26 +191,26 @@ class TestCargoFactory:
         assert (
             cargo.delivery_history.handling_events[
                 1
-            ].carrier_movement.departure_location.name
-            == departure_location_name
-        )
-        assert (
-            cargo.delivery_history.handling_events[
-                1
             ].carrier_movement.departure_location.code
             == departure_location_code
         )
         assert (
             cargo.delivery_history.handling_events[
                 1
-            ].carrier_movement.arrival_location.name
-            == arrival_location_name
+            ].carrier_movement.departure_location.name
+            == departure_location_name
         )
         assert (
             cargo.delivery_history.handling_events[
                 1
             ].carrier_movement.arrival_location.code
             == arrival_location_code
+        )
+        assert (
+            cargo.delivery_history.handling_events[
+                1
+            ].carrier_movement.arrival_location.name
+            == arrival_location_name
         )
         assert (
             cargo.delivery_history.handling_events[

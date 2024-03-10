@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.handling.handling_event import (
     HandlingActivity,
@@ -9,6 +7,7 @@ from cargo_shipping.domain.model.handling.handling_event_factory import (
 )
 from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.loading_service import LoadingService
+from tests import utils
 from tests.unit.mocks import FakeCargoRepository, FakeCarrierMovementRepository
 
 
@@ -17,7 +16,6 @@ class TestLoadingService:
         """
         1. Prepare
         """
-        # instantiate classes
         handling_event_factory = HandlingEventFactory()
         cargo_repository = FakeCargoRepository()
         carrier_movement_repository = FakeCarrierMovementRepository()
@@ -28,16 +26,21 @@ class TestLoadingService:
         )
 
         # create cargo booking
-        tracking_id = "TEST_ID"
-        destination = Location("TEST_DEST", "DEST_CODE")
-        deadline = datetime.now()
-        cargo = CargoFactory().create(tracking_id, destination, deadline)
+        tracking_id = utils.random_string()
+        destination = Location(utils.random_string(), utils.random_string())
+        deadline = utils.random_datetime()
+        cargo = CargoFactory(HandlingEventFactory()).create(
+            tracking_id, destination, deadline
+        )
         cargo_repository.save(cargo)
 
-        # declare variables
-        departure_location = Location("TEST_DEPARTURE", "DEPARTURE_CODE")
-        arrival_location = Location("TEST_ARRIVAL", "ARRIVAL_CODE")
-        time_stamp = datetime.now()
+        departure_location = Location(
+            utils.random_string(), utils.random_string()
+        )
+        arrival_location = Location(
+            utils.random_string(), utils.random_string()
+        )
+        time_stamp = utils.random_datetime()
 
         """
         2. Execute

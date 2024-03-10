@@ -3,8 +3,7 @@ Implementation of the Cargo Shipping System described in "Domain Driven Design -
 
 ## Run application
 ```bash
-docker-compose build
-docker-compose up
+docker compose up --build
 ```
 
 ## Development
@@ -25,11 +24,7 @@ db.booking.find()
 ```
 
 ## Todo
-- [x] pymongo
-- [x] fast api
-- [x] implement loading
-- [x] implement unloading
-- [] implement received (current location must equal delivery specification)
 - [] error handling
 - [] fix typing
 - [] configure git pre-commit hooks, code quality and coverage
+- [] open api

@@ -8,6 +8,7 @@ from cargo_shipping.domain.model.handling.handling_event import (
 from cargo_shipping.domain.model.handling.handling_event_factory import (
     HandlingEventFactory,
 )
+from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.loading_service import LoadingService
 from cargo_shipping.domain.services.unloading_service import UnLoadingService
 from cargo_shipping.infrastructure.persistence import (
@@ -25,7 +26,7 @@ router = APIRouter(
 
 db = database.get_database()
 handling_event_factory = HandlingEventFactory()
-cargo_factory = CargoFactory()
+cargo_factory = CargoFactory(handling_event_factory)
 cargo_repository_ = cargo_repository.CargoRepository(
     db["booking"], cargo_factory
 )
@@ -48,14 +49,17 @@ async def add_handling_event(request: HandlingEventRequest):
         case HandlingActivity.LOADING:
             return loading_service.execute(
                 request.tracking_id,
-                request.departure_location,
-                request.arrival_location,
+                Location(
+                    request.departure_location.code,
+                    request.departure_location.name,
+                ),
+                Location(
+                    request.arrival_location.code,
+                    request.arrival_location.name,
+                ),
                 request.time_stamp,
             )
         case HandlingActivity.UNLOADING:
             return unloading_service.execute(
-                request.tracking_id,
-                request.departure_location,
-                request.arrival_location,
-                request.time_stamp,
+                request.tracking_id, request.time_stamp
             )

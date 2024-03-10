@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Entity(object):
-    _entity_id: str
+    _id: str
 
     def __eq__(self, other: object) -> bool:
         return self.id == other.id
@@ -11,6 +11,9 @@ class Entity(object):
     def __ne__(self, other: object) -> bool:
         return not self == other
 
+    def to_dict(self) -> dict:
+        raise NotImplementedError
+
     @property
     def id(self):
-        return self._entity_id
+        return self._id

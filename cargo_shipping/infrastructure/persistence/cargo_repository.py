@@ -2,7 +2,7 @@ from pymongo.collection import Collection
 
 from cargo_shipping.domain.model.cargo.cargo import Cargo
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
-from cargo_shipping.infrastructure.persistence.repository import (
+from cargo_shipping.infrastructure.persistence.mongo_db_repository import (
     MongoDBRepository,
 )
 

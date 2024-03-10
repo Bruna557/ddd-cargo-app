@@ -1,5 +1,5 @@
 from cargo_shipping.domain.model.location.location import Location
-from cargo_shipping.infrastructure.persistence.repository import (
+from cargo_shipping.infrastructure.persistence.mongo_db_repository import (
     MongoDBRepository,
 )
 

@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "362b6a6b-82a8-4634-975d-395569d1cdb7",
+		"name": "ddd-cargo-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14801013"
+	},
+	"item": [
+		{
+			"name": "Get booking",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/booking?id=123",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"booking"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Location",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/tracking?tracking_id=123",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"tracking"
+					],
+					"query": [
+						{
+							"key": "tracking_id",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tracking History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/tracking/history?tracking_id=123",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"tracking",
+						"history"
+					],
+					"query": [
+						{
+							"key": "tracking_id",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add booking",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"destination\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"deadline\": \"2024-03-08\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/booking",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Load Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"departure_location\": {\r\n        \"code\": \"NYC\",\r\n        \"name\": \"NEW YORK CITY\"\r\n    },\r\n    \"arrival_location\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"time_stamp\": \"2024-03-07 22:22:26.836842\",\r\n    \"handling_activity\": \"LOADING\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/handling",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"handling"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unload Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"departure_location\": {\r\n        \"code\": \"NYC\",\r\n        \"name\": \"NEW YORK CITY\"\r\n    },\r\n    \"arrival_location\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"time_stamp\": \"2024-03-08 10:14:41.539671\",\r\n    \"handling_activity\": \"UNLOADING\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/handling",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"handling"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

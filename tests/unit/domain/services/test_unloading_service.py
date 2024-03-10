@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.carrier.carrier_movement import (
     CarrierMovement,
@@ -12,6 +10,7 @@ from cargo_shipping.domain.model.handling.handling_event_factory import (
 )
 from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.unloading_service import UnLoadingService
+from tests import utils
 from tests.unit.mocks import FakeCargoRepository, FakeCarrierMovementRepository
 
 
@@ -20,7 +19,6 @@ class TestUnLoadingService:
         """
         1. Prepare
         """
-        # instantiate classes
         handling_event_factory = HandlingEventFactory()
         cargo_repository = FakeCargoRepository()
         carrier_movement_repository = FakeCarrierMovementRepository()
@@ -31,16 +29,22 @@ class TestUnLoadingService:
         )
 
         # create cargo booking
-        tracking_id = "TEST_ID"
-        destination = Location("TEST_DEST", "DEST_CODE")
-        deadline = datetime.now()
-        cargo = CargoFactory().create(tracking_id, destination, deadline)
+        tracking_id = utils.random_string()
+        destination = Location(utils.random_string(), utils.random_string())
+        deadline = utils.random_datetime()
+        cargo = CargoFactory(HandlingEventFactory()).create(
+            tracking_id, destination, deadline
+        )
 
         # create loading carrier movement
-        departure_location = Location("TEST_DEPARTURE", "DEPARTURE_CODE")
-        arrival_location = Location("TEST_ARRIVAL", "ARRIVAL_CODE")
-        departure_time = datetime.now()
-        arrival_time = datetime.now()
+        departure_location = Location(
+            utils.random_string(), utils.random_string()
+        )
+        arrival_location = Location(
+            utils.random_string(), utils.random_string()
+        )
+        departure_time = utils.random_datetime()
+        arrival_time = utils.random_datetime()
         carrier_movement = CarrierMovement(
             departure_location, arrival_location, departure_time
         )

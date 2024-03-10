@@ -16,6 +16,9 @@ from cargo_shipping.domain.model.location.location import Location
 
 
 class CargoFactory(Factory):
+    def __init__(self, handling_event_factory: HandlingEventFactory):
+        self.handling_event_factory = handling_event_factory
+
     def create(
         self, id: str, destination: Location, deadline: datetime
     ) -> Cargo:
@@ -29,30 +32,28 @@ class CargoFactory(Factory):
         cargo = Cargo(d["id"])
         cargo.delivery_specification = DeliverySpecification(
             Location(
-                d["delivery_specification"]["destination"]["name"],
                 d["delivery_specification"]["destination"]["code"],
+                d["delivery_specification"]["destination"]["name"],
             ),
             d["delivery_specification"]["deadline"],
         )
         delivery_history = DeliveryHistory(d["delivery_history"]["id"])
-        # TODO: inject dependency
-        handling_event_factory = HandlingEventFactory()
         for handling_event in d["delivery_history"]["handling_events"]:
             carrier_movement = CarrierMovement(
                 Location(
                     handling_event["carrier_movement"]["departure_location"][
-                        "name"
+                        "code"
                     ],
                     handling_event["carrier_movement"]["departure_location"][
-                        "code"
+                        "name"
                     ],
                 ),
                 Location(
                     handling_event["carrier_movement"]["arrival_location"][
-                        "name"
+                        "code"
                     ],
                     handling_event["carrier_movement"]["arrival_location"][
-                        "code"
+                        "name"
                     ],
                 ),
                 handling_event["carrier_movement"]["departure_time"],
@@ -62,7 +63,7 @@ class CargoFactory(Factory):
                 handling_event["carrier_movement"]["arrival_time"]
             )
             delivery_history.add(
-                handling_event_factory.create(
+                self.handling_event_factory.create(
                     carrier_movement,
                     handling_event["completion_time"],
                     handling_event["type"],

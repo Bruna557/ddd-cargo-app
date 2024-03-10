@@ -28,3 +28,9 @@ class DeliveryHistory(Entity):
         if latest_carrier_movement.arrival_time:
             return latest_carrier_movement.arrival_location
         return latest_carrier_movement.departure_location
+
+    def to_dict(self) -> dict:
+        dict_ = {"id": self.id, "handling_events": []}
+        for handling_event in self.handling_events:
+            dict_["handling_events"].append(handling_event.to_dict())
+        return dict_

@@ -1,8 +1,10 @@
-from datetime import datetime
-
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
+from cargo_shipping.domain.model.handling.handling_event_factory import (
+    HandlingEventFactory,
+)
 from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.booking_service import BookingService
+from tests import utils
 from tests.unit.mocks import FakeCargoRepository
 
 
@@ -11,15 +13,13 @@ class TestBookingService:
         """
         1. Prepare
         """
-        # instantiate classes
-        cargo_factory = CargoFactory()
+        cargo_factory = CargoFactory(HandlingEventFactory())
         cargo_repository = FakeCargoRepository()
         booking_service = BookingService(cargo_factory, cargo_repository)
 
-        # declare variables
-        tracking_id = "TEST_ID"
-        destination = Location("TEST_LOCATION", "TEST_CODE")
-        deadline = datetime.today().strftime("%Y-%m-%d")
+        tracking_id = utils.random_string()
+        destination = Location(utils.random_string(), utils.random_string())
+        deadline = utils.random_datetime()
 
         """
         2. Execute

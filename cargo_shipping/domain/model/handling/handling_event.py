@@ -27,3 +27,10 @@ class HandlingEvent(Entity):
 
     def set_carrier_movement(self, carrier_movement: CarrierMovement) -> None:
         self.carrier_movement = carrier_movement
+
+    def to_dict(self) -> dict:
+        return {
+            "type": self.type,
+            "completion_time": self.completion_time,
+            "carrier_movement": self.carrier_movement.to_dict(),
+        }

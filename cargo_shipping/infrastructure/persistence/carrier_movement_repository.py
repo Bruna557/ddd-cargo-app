@@ -2,7 +2,7 @@ from cargo_shipping.domain.model.carrier.carrier_movement import (
     CarrierMovement,
 )
 from cargo_shipping.domain.model.location.location import Location
-from cargo_shipping.infrastructure.persistence.repository import (
+from cargo_shipping.infrastructure.persistence.mongo_db_repository import (
     MongoDBRepository,
 )
 
@@ -16,11 +16,12 @@ class CarrierMovementRepository(MongoDBRepository):
         result = MongoDBRepository.get_by_key(self, "tracking_id", tracking_id)
         return CarrierMovement(**result)
 
-    def find_by_from_to(
-        self, from_: Location, to: Location
+    def find_by_departure_arrival(
+        self, departure: Location, arrival: Location
     ) -> CarrierMovement:
         result = self.collection.find_one(
-            {"from": from_, "to": to}, {"_id": 0}
+            {"departure_location": departure, "arrival_location": arrival},
+            {"_id": 0},
         )
         return CarrierMovement(**result)
 

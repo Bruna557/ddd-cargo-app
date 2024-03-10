@@ -4,3 +4,6 @@ class ValueObject(object):
 
     def __ne__(self, other: object) -> bool:
         return not self == other
+
+    def to_dict(self) -> dict:
+        raise NotImplementedError

@@ -4,7 +4,9 @@ from cargo_shipping.domain.model.cargo.cargo import Cargo
 from cargo_shipping.domain.model.carrier.carrier_movement import (
     CarrierMovement,
 )
-from cargo_shipping.infrastructure.persistence.repository import Repository
+from cargo_shipping.infrastructure.persistence.mongo_db_repository import (
+    Repository,
+)
 
 
 class FakeCargoRepository(Repository):
