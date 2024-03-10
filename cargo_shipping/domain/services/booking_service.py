@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime
 
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.location.location import Location
@@ -15,7 +15,7 @@ class BookingService:
         self.repository = repository
 
     def execute(
-        self, tracking_id: str, destination: Location, arrival_time: time
+        self, tracking_id: str, destination: Location, deadline: datetime
     ):
-        cargo = self.factory.create(tracking_id, destination, arrival_time)
+        cargo = self.factory.create(tracking_id, destination, deadline)
         cargo = self.repository.save(cargo)

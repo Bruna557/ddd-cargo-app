@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
+from cargo_shipping.domain.model.carrier.carrier_movement import (
+    CarrierMovement,
+)
 from cargo_shipping.domain.model.handling.handling_event import (
     HandlingActivity,
 )
@@ -8,11 +11,11 @@ from cargo_shipping.domain.model.handling.handling_event_factory import (
     HandlingEventFactory,
 )
 from cargo_shipping.domain.model.location.location import Location
-from cargo_shipping.domain.services.loading_service import LoadingService
+from cargo_shipping.domain.services.unloading_service import UnLoadingService
 from tests.unit.mocks import FakeCargoRepository, FakeCarrierMovementRepository
 
 
-class TestLoadingService:
+class TestUnLoadingService:
     def test_execute_success(self):
         """
         1. Prepare
@@ -21,7 +24,7 @@ class TestLoadingService:
         handling_event_factory = HandlingEventFactory()
         cargo_repository = FakeCargoRepository()
         carrier_movement_repository = FakeCarrierMovementRepository()
-        loading_service = LoadingService(
+        unloading_service = UnLoadingService(
             handling_event_factory,
             cargo_repository,
             carrier_movement_repository,
@@ -32,27 +35,35 @@ class TestLoadingService:
         destination = Location("TEST_DEST", "DEST_CODE")
         deadline = datetime.now()
         cargo = CargoFactory().create(tracking_id, destination, deadline)
-        cargo_repository.save(cargo)
 
-        # declare variables
+        # create loading carrier movement
         departure_location = Location("TEST_DEPARTURE", "DEPARTURE_CODE")
         arrival_location = Location("TEST_ARRIVAL", "ARRIVAL_CODE")
-        time_stamp = datetime.now()
+        departure_time = datetime.now()
+        arrival_time = datetime.now()
+        carrier_movement = CarrierMovement(
+            departure_location, arrival_location, departure_time
+        )
+        carrier_movement_repository.save(carrier_movement)
+
+        # add loading handling event
+        handling_event = handling_event_factory.create(
+            carrier_movement, departure_time, HandlingActivity.LOADING
+        )
+        cargo.delivery_history.add(handling_event)
+        cargo_repository.save(cargo)
 
         """
         2. Execute
         """
-        loading_service.execute(
-            tracking_id, departure_location, arrival_location, time_stamp
-        )
+        unloading_service.execute(tracking_id, arrival_time)
 
         """
         3. Assert
         """
-        byproduct_handling_event = cargo.delivery_history.handling_events[0]
-        byproduct_carrier_movement = carrier_movement_repository.get_all()[0]
-        assert byproduct_handling_event.type == HandlingActivity.LOADING
-        assert byproduct_handling_event.completion_time == time_stamp
+        byproduct_handling_event = cargo.delivery_history.handling_events[1]
+        assert byproduct_handling_event.type == HandlingActivity.UNLOADING
+        assert byproduct_handling_event.completion_time == arrival_time
         assert (
             byproduct_handling_event.carrier_movement.departure_location
             == departure_location
@@ -63,11 +74,10 @@ class TestLoadingService:
         )
         assert (
             byproduct_handling_event.carrier_movement.departure_time
-            == time_stamp
+            == departure_time
         )
-        assert byproduct_handling_event.carrier_movement.arrival_time is None
         assert (
-            byproduct_carrier_movement.departure_location == departure_location
+            byproduct_handling_event.carrier_movement.arrival_time
+            == arrival_time
         )
-        assert byproduct_carrier_movement.arrival_location == arrival_location
-        assert byproduct_carrier_movement.departure_time == time_stamp
+        assert carrier_movement.arrival_time == arrival_time

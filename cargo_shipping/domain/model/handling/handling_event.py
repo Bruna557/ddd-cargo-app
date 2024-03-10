@@ -1,5 +1,5 @@
 import uuid
-from datetime import time
+from datetime import datetime
 from enum import Enum
 
 from cargo_shipping.domain.model.base.entity import Entity
@@ -8,17 +8,17 @@ from cargo_shipping.domain.model.carrier.carrier_movement import (
 )
 
 
-class HandlingActivity(Enum):
+class HandlingActivity(str, Enum):
     LOADING = "LOADING"
     UNLOADING = "UNLOADING"
-    RECEIVED = "RECEIVED"
+    DELIVERED = "DELIVERED"
 
 
 class HandlingEvent(Entity):
     def __init__(
         self,
         type: HandlingActivity,
-        completion_time: time,
+        completion_time: datetime,
     ) -> None:
         Entity.__init__(self, str(uuid.uuid4()))
         self.type = type

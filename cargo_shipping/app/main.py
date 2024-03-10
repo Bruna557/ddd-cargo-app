@@ -1,5 +1,6 @@
-from app.routers import booking, handling, tracking
 from fastapi import FastAPI
+
+from cargo_shipping.app.routers import booking, handling, tracking
 
 app = FastAPI()
 

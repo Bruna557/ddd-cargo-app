@@ -1,13 +1,11 @@
 from datetime import datetime
 
-from cargo_shipping.domain.model.carrier.carrier_movement import (
-    CarrierMovement,
+from cargo_shipping.domain.model.handling.handling_event import (
+    HandlingActivity,
 )
 from cargo_shipping.domain.model.handling.handling_event_factory import (
-    HandlingActivity,
     HandlingEventFactory,
 )
-from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.infrastructure.persistence.cargo_repository import (
     CargoRepository,
 )
@@ -16,7 +14,7 @@ from cargo_shipping.infrastructure.persistence.carrier_movement_repository impor
 )
 
 
-class LoadingService:
+class UnLoadingService:
     def __init__(
         self,
         handling_event_factory: HandlingEventFactory,
@@ -30,18 +28,14 @@ class LoadingService:
     def execute(
         self,
         tracking_id: str,
-        departure_location: Location,
-        arrival_location: Location,
         time_stamp: datetime,
     ) -> None:
-
         cargo = self.cargo_repository.find_by_tracking_id(tracking_id)
-        carrier_movement = CarrierMovement(
-            departure_location, arrival_location, time_stamp
-        )
+        carrier_movement = cargo.delivery_history.latest_carrier_movement
         handling_event = self.handling_event_factory.create(
-            carrier_movement, time_stamp, HandlingActivity.LOADING
+            carrier_movement, time_stamp, HandlingActivity.UNLOADING
         )
+        carrier_movement.set_arrival_time(time_stamp)
         cargo.delivery_history.add(handling_event)
         self.cargo_repository.save(cargo)
         self.carrier_movement_repository.save(carrier_movement)

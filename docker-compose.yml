@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  # Application service
+  web:
+    build:
+      context: .
+      args:
+        requirements_file: requirements.txt
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./data:/data
+    depends_on:
+      - mongodb
+    env_file: .env
+    restart: always
+    networks:
+      - app-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:5.0
+    env_file: .env
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local

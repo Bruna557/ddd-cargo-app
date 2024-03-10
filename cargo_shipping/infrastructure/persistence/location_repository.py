@@ -1,9 +1,14 @@
-from ...domain.model.location.location import Location
+from cargo_shipping.domain.model.location.location import Location
+from cargo_shipping.infrastructure.persistence.repository import (
+    MongoDBRepository,
+)
 
 
 class LocationRepository:
-    def find_by_port_code(self, port_code: str) -> Location:
-        pass
+    def find_by_code(self, code: str) -> Location:
+        result = MongoDBRepository.get_by_key(self, "code", code)
+        return Location(**result)
 
-    def find_by_city_name(self, city_name: str) -> Location:
-        pass
+    def find_by_name(self, name: str) -> Location:
+        result = MongoDBRepository.get_by_key(self, "name", name)
+        return Location(**result)
