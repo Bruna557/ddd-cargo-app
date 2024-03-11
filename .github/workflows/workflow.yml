@@ -31,4 +31,4 @@ jobs:
         with:
           # repository > settings > secrets and variables > actions > new repository secret
           api-token: ${{ secrets.CODACY_API_TOKEN }}
-          coverage-reports: ./coverage.json
+          coverage-reports: ./coverage.xml
