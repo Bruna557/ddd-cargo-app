@@ -1,21 +1,27 @@
 # DDD Cargo App
 Implementation of the Cargo Shipping System described in "Domain Driven Design - Tackling Complexity in the Heart of Software" chapter 7.
 
-## Run application
+## Code Quality
+
+
+## Run Application
+
 ```bash
 docker compose up --build
 ```
 
 ## Development
 
-### Run tests
+### Run Tests
+
 ```bash
 source ./venv/Scripts/activate
 pip install -r requirements.txt
 pytest
 ```
 
-### Connect to mongo
+### Connect to MongoDB
+
 ```bash
 docker exec -it ddd-cargo-app-mongodb-1 bash
 mongo -u myuser -p mypass
@@ -24,6 +30,7 @@ db.booking.find()
 ```
 
 ## Todo
+
 - [] error handling
 - [] fix typing
 - [] configure git pre-commit hooks, code quality and coverage
