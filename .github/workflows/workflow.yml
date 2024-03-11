@@ -22,34 +22,24 @@ jobs:
         run: |
           pytest --cov-report term --cov=cargo_shipping tests/ --cov-report xml
 
-      - name: Temporarily save coverage file
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-file
-          path: coverage.xml
-
-  codacy-coverage-reporter:
-    needs: test
-    runs-on: ubuntu-latest
-    name: codacy-coverage-reporter
-    steps:
-      - uses: actions/checkout@master
-      - name: Downlaod coverage report
-
-      - name: Retrieve saved coverage file
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage.xml
-          path: reports/
-
-      - name: List
-        run: |
-          ls
-
-      - uses: actions/checkout@master
-      - name: Run codacy-coverage-reporter
-        uses: codacy/codacy-coverage-reporter-action@master
+      - uses: actions/checkout@v2
+      - name: Upload coverage report to codacy
+        uses: codacy/codacy-coverage-reporter-action@v1
         with:
           # repository > settings > secrets and variables > actions > new repository secret
           api-token: ${{ secrets.CODACY_API_TOKEN }}
-          coverage-reports: reports/coverage.xml
+          coverage-reports: coverage.xml
+
+  # codacy-coverage-reporter:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   name: codacy-coverage-reporter
+  #   steps:
+
+  #     - uses: actions/checkout@v2
+  #     - name: Run codacy-coverage-reporter
+  #       uses: codacy/codacy-coverage-reporter-action@v1
+  #       with:
+  #         # repository > settings > secrets and variables > actions > new repository secret
+  #         api-token: ${{ secrets.CODACY_API_TOKEN }}
+  #         coverage-reports: coverage.xml
