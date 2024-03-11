@@ -30,8 +30,8 @@ jobs:
       - name: Upload coverage file
         with:
           api-token: ${{ secrets.CODACY_API_TOKEN }}
-        run: |
-          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
+          run: |
+            bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
 
   # codacy-coverage-reporter:
   #   needs: test
