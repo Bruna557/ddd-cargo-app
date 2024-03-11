@@ -21,27 +21,17 @@ jobs:
       - name: Run tests
         run: |
           pytest --cov-report term --cov=cargo_shipping tests/ --cov-report xml
+          ls
 
-  test-codacy-coverage:
+  codacy-coverage-reporter:
     needs: test
     runs-on: ubuntu-latest
-    name: upload-coverage-to-codacy
+    name: codacy-coverage-reporter
     steps:
-      - name: Upload coverage file
+      - uses: actions/checkout@master
+      - name: Run codacy-coverage-reporter
+        uses: codacy/codacy-coverage-reporter-action@master
         with:
+          # repository > settings > secrets and variables > actions > new repository secret
           api-token: ${{ secrets.CODACY_API_TOKEN }}
-          run: |
-            bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
-
-  # codacy-coverage-reporter:
-  #   needs: test
-  #   runs-on: ubuntu-latest
-  #   name: codacy-coverage-reporter
-  #   steps:
-  #     - uses: actions/checkout@master
-  #     - name: Run codacy-coverage-reporter
-  #       uses: codacy/codacy-coverage-reporter-action@master
-  #       with:
-  #         # repository > settings > secrets and variables > actions > new repository secret
-  #         api-token: ${{ secrets.CODACY_API_TOKEN }}
-  #         coverage-reports: coverage.xml
+          coverage-reports: coverage.xml
