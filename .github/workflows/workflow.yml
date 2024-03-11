@@ -19,7 +19,7 @@ on: ["push", "pull_request"]
 
         - name: Run tests
           run: |
-            pytest --cov-report term --cov=cargo_shipping tests/ --cov-report json
+            pytest --cov-report term --cov=cargo_shipping tests/ --cov-report xml
 
     codacy-coverage-reporter:
       runs-on: ubuntu-latest
@@ -31,4 +31,4 @@ on: ["push", "pull_request"]
           with:
             # repository > settings > secrets and variables > actions > new repository secret
             api-token: ${{ secrets.CODACY_API_TOKEN }}
-            coverage-reports: coverage.json
+            coverage-reports: ./coverage.json
