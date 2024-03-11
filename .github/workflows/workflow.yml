@@ -21,10 +21,10 @@ jobs:
       - name: Run tests
         run: |
           pytest --cov-report term --cov=cargo_shipping tests/ --cov-report xml
+          ls
 
-      - uses: actions/checkout@v2
-      - name: Upload coverage report to codacy
-        uses: codacy/codacy-coverage-reporter-action@v1
+      - name: Upload coverage report to Codacy
+        uses: codacy/codacy-coverage-reporter-action@v2
         with:
           # repository > settings > secrets and variables > actions > new repository secret
           api-token: ${{ secrets.CODACY_API_TOKEN }}
