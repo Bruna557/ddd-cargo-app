@@ -1,3 +1,5 @@
+"""Test file."""
+
 from cargo_shipping.domain.model.carrier.carrier_movement import (
     CarrierMovement,
 )
@@ -6,10 +8,12 @@ from tests import utils
 
 
 class TestCarrierMovement:
+    """Carrier Movement Tests."""
+
     def test_set_arrival_time(self):
-        """
-        1. Prepare
-        """
+        """Test set_arrival_time method."""
+
+        # 1. Prepare
         departure_location = Location(
             utils.random_string(), utils.random_string()
         )
@@ -21,22 +25,18 @@ class TestCarrierMovement:
             departure_location, arrival_location, departure_time
         )
 
-        """
-        2. Execute
-        """
+        # 2. Execute
         arrival_time = utils.random_datetime()
         carrier_movement.set_arrival_time(arrival_time)
 
-        """
-        3. Assert
-        """
+        # 3. Assert
         assert carrier_movement.arrival_time == arrival_time
 
     def test_to_dict(self):
-        """
-        1. Prepare
-        """
-        id = utils.random_string()
+        """Test to_dict method."""
+
+        # 1. Prepare
+        entity_id = utils.random_string()
         departure_location_code = utils.random_string()
         departure_location_name = utils.random_string()
         departure_location = Location(
@@ -53,19 +53,15 @@ class TestCarrierMovement:
             departure_location,
             arrival_location,
             departure_time,
-            id,
+            entity_id,
             arrival_time,
         )
 
-        """
-        2. Execute
-        """
+        # 2. Execute
         carrier_movement_dict = carrier_movement.to_dict()
 
-        """
-        3. Assert
-        """
-        assert carrier_movement_dict["id"] == id
+        # 3. Assert
+        assert carrier_movement_dict["entity_id"] == entity_id
         assert (
             carrier_movement_dict["departure_location"]["code"]
             == departure_location_code

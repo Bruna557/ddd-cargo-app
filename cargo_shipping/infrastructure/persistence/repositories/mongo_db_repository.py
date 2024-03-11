@@ -1,3 +1,5 @@
+"""Implement MongoDB Repository"""
+
 from pymongo.collection import Collection
 
 from cargo_shipping.domain.model.base.entity import Entity
@@ -5,6 +7,10 @@ from cargo_shipping.domain.model.base.repository import Repository
 
 
 class MongoDBRepository(Repository):
+    """
+    MongoDB Repository abstracts away storage details of a MongoDB database
+    """
+
     def __init__(self, collection: Collection):
         self.collection = collection
 

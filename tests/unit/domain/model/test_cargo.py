@@ -1,36 +1,42 @@
-from datetime import datetime
+"""Test file."""
 
 from cargo_shipping.domain.model.cargo.cargo import Cargo
-from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
+from cargo_shipping.domain.model.cargo.cargo_factory import (
+    CargoFactory,
+    CargoFactoryConfig,
+)
 from cargo_shipping.domain.model.cargo.delivery_history import DeliveryHistory
 from cargo_shipping.domain.model.carrier.carrier_movement import (
     CarrierMovement,
 )
-from cargo_shipping.domain.model.handling.handling_event import (
-    HandlingActivity,
-    HandlingEvent,
-)
 from cargo_shipping.domain.model.handling.handling_event_factory import (
     HandlingEventFactory,
+    HandlingEventFactoryConfig,
+    HandlingEventTypes,
 )
 from cargo_shipping.domain.model.location.location import Location
 from tests import utils
 
 
 class TestCargo:
+    """Cargo Tests."""
+
     def test_to_dict(self):
-        """
-        1. Prepare
-        """
-        cargo_id = utils.random_string()
-        cargo = Cargo(cargo_id)
-        factory = CargoFactory(HandlingEventFactory())
+        """Test to_dict method."""
+
+        # 1. Prepare
+        tracking_id = utils.random_string()
+        cargo = Cargo(tracking_id)
+        handling_event_factory = HandlingEventFactory()
+        cargo_factory = CargoFactory(handling_event_factory)
 
         destination_code = utils.random_string()
         destination_name = utils.random_string()
         destination = Location(destination_code, destination_name)
         deadline = utils.random_datetime()
-        cargo = factory.create(cargo_id, destination, deadline)
+        cargo = cargo_factory.create(
+            CargoFactoryConfig(tracking_id, destination, deadline)
+        )
 
         delivery_history_id = "HISTORY_ID"
         delivery_history = DeliveryHistory(delivery_history_id)
@@ -65,12 +71,20 @@ class TestCargo:
             unloading_carrier_movement_id,
         )
 
-        loading_handling_event = HandlingEvent(
-            HandlingActivity.LOADING, loading_completion_time
+        loading_handling_event = handling_event_factory.create(
+            HandlingEventFactoryConfig(
+                loading_carrier_movement,
+                loading_completion_time,
+                HandlingEventTypes.LOADING,
+            )
         )
         loading_handling_event.carrier_movement = loading_carrier_movement
-        unloading_handling_event = HandlingEvent(
-            HandlingActivity.UNLOADING, unloading_completion_time
+        unloading_handling_event = handling_event_factory.create(
+            HandlingEventFactoryConfig(
+                unloading_carrier_movement,
+                unloading_completion_time,
+                HandlingEventTypes.UNLOADING,
+            )
         )
         unloading_handling_event.carrier_movement = unloading_carrier_movement
         delivery_history.add(loading_handling_event)
@@ -78,15 +92,11 @@ class TestCargo:
 
         cargo.delivery_history = delivery_history
 
-        """
-        2. Execute
-        """
+        # 2. Execute
         cargo_dict = cargo.to_dict()
 
-        """
-        3. Assert
-        """
-        assert cargo_dict["id"] == cargo_id
+        # 3. Assert
+        assert cargo_dict["tracking_id"] == tracking_id
         assert (
             cargo_dict["delivery_specification"]["destination"]["code"]
             == destination_code
@@ -96,10 +106,12 @@ class TestCargo:
             == destination_name
         )
         assert cargo_dict["delivery_specification"]["deadline"] == deadline
-        assert cargo_dict["delivery_history"]["id"] == delivery_history_id
         assert (
-            cargo_dict["delivery_history"]["handling_events"][0]["type"]
-            == HandlingActivity.LOADING
+            cargo_dict["delivery_history"]["entity_id"] == delivery_history_id
+        )
+        assert (
+            cargo_dict["delivery_history"]["handling_events"][0]["event_type"]
+            == HandlingEventTypes.LOADING
         )
         assert (
             cargo_dict["delivery_history"]["handling_events"][0][
@@ -110,7 +122,7 @@ class TestCargo:
         assert (
             cargo_dict["delivery_history"]["handling_events"][0][
                 "carrier_movement"
-            ]["id"]
+            ]["entity_id"]
             == loading_carrier_movement_id
         )
         assert (
@@ -150,8 +162,8 @@ class TestCargo:
             == arrival_time
         )
         assert (
-            cargo_dict["delivery_history"]["handling_events"][1]["type"]
-            == HandlingActivity.UNLOADING
+            cargo_dict["delivery_history"]["handling_events"][1]["event_type"]
+            == HandlingEventTypes.UNLOADING
         )
         assert (
             cargo_dict["delivery_history"]["handling_events"][1][
@@ -162,7 +174,7 @@ class TestCargo:
         assert (
             cargo_dict["delivery_history"]["handling_events"][1][
                 "carrier_movement"
-            ]["id"]
+            ]["entity_id"]
             == unloading_carrier_movement_id
         )
         assert (

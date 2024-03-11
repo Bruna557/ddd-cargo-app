@@ -1,12 +1,14 @@
+"""API methods for getting tracking information."""
+
 from fastapi import APIRouter
 
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.handling.handling_event_factory import (
     HandlingEventFactory,
 )
-from cargo_shipping.infrastructure.persistence import (
+from cargo_shipping.infrastructure.persistence import database
+from cargo_shipping.infrastructure.persistence.repositories import (
     cargo_repository,
-    database,
 )
 
 router = APIRouter(
@@ -24,12 +26,16 @@ repository = cargo_repository.CargoRepository(db["booking"], cargo_factory)
 
 @router.get("/")
 async def get_location(tracking_id: str):
+    """Get the current location of a cargo."""
+
     cargo = repository.find_by_tracking_id(tracking_id)
     return {"location": cargo.delivery_history.current_location}
 
 
 @router.get("/history")
 async def get_history(tracking_id: str):
+    """Get the history of handling events of a cargo."""
+
     cargo = repository.find_by_tracking_id(tracking_id)
     return {
         "history": [

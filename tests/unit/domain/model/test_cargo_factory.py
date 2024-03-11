@@ -1,6 +1,9 @@
-from datetime import datetime
+"""Test file."""
 
-from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
+from cargo_shipping.domain.model.cargo.cargo_factory import (
+    CargoFactory,
+    CargoFactoryConfig,
+)
 from cargo_shipping.domain.model.cargo.delivery_specification import (
     DeliverySpecification,
 )
@@ -12,39 +15,41 @@ from tests import utils
 
 
 class TestCargoFactory:
-    def test_create_success(self):
-        """
-        1. Prepare
-        """
-        factory = CargoFactory(HandlingEventFactory())
+    """Cargo Factory Tests."""
 
-        id = utils.random_string()
+    def test_create_success(self):
+        """Test create method when should be successful."""
+
+        # 1. Prepare
+        handling_event_factory = HandlingEventFactory()
+        cargo_factory = CargoFactory(handling_event_factory)
+
+        tracking_id = utils.random_string()
         destination_code = utils.random_string()
         destination_name = utils.random_string()
         destination = Location(destination_code, destination_name)
         deadline = utils.random_datetime()
 
-        """
-        2. Execute
-        """
-        cargo = factory.create(id, destination, deadline)
+        # 2. Execute
+        cargo = cargo_factory.create(
+            CargoFactoryConfig(tracking_id, destination, deadline)
+        )
 
-        """
-        3. Assert
-        """
-        assert cargo.id == id
+        # 3. Assert
+        assert cargo.entity_id == tracking_id
         assert cargo.delivery_specification == DeliverySpecification(
             destination, deadline
         )
-        assert cargo.delivery_history.handling_events == []
+        assert not cargo.delivery_history.handling_events
 
     def test_create_from_dict_success(self):
-        """
-        1. Prepare
-        """
-        factory = CargoFactory(HandlingEventFactory())
+        """Test create_from_dict method when should be successful."""
 
-        cargo_id = utils.random_string()
+        # 1. Prepare
+        handling_event_factory = HandlingEventFactory()
+        cargo_factory = CargoFactory(handling_event_factory)
+
+        tracking_id = utils.random_string()
         destination_name = utils.random_string()
         destination_code = utils.random_string()
         deadline = utils.random_datetime()
@@ -62,7 +67,7 @@ class TestCargoFactory:
         departure_time = utils.random_datetime()
         arrival_time = utils.random_datetime()
         cargo_dict = {
-            "id": cargo_id,
+            "tracking_id": tracking_id,
             "delivery_specification": {
                 "destination": {
                     "code": destination_code,
@@ -111,15 +116,11 @@ class TestCargoFactory:
             },
         }
 
-        """
-        2. Execute
-        """
-        cargo = factory.create_from_dict(cargo_dict)
+        # 2. Execute
+        cargo = cargo_factory.create_from_dict(cargo_dict)
 
-        """
-        3. Assert
-        """
-        assert cargo.id == cargo_id
+        # 3. Assert
+        assert cargo.entity_id == tracking_id
         assert (
             cargo.delivery_specification.destination.code == destination_code
         )
@@ -127,9 +128,9 @@ class TestCargoFactory:
             cargo.delivery_specification.destination.name == destination_name
         )
         assert cargo.delivery_specification.deadline == deadline
-        assert cargo.delivery_history.id == delivery_history_id
+        assert cargo.delivery_history.entity_id == delivery_history_id
         assert (
-            cargo.delivery_history.handling_events[0].type
+            cargo.delivery_history.handling_events[0].event_type
             == loading_event_type
         )
         assert (
@@ -137,7 +138,9 @@ class TestCargoFactory:
             == loading_event_completion_time
         )
         assert (
-            cargo.delivery_history.handling_events[0].carrier_movement.id
+            cargo.delivery_history.handling_events[
+                0
+            ].carrier_movement.entity_id
             == loading_carrier_movement_id
         )
         assert (
@@ -177,7 +180,7 @@ class TestCargoFactory:
             == arrival_time
         )
         assert (
-            cargo.delivery_history.handling_events[1].type
+            cargo.delivery_history.handling_events[1].event_type
             == unloading_event_type
         )
         assert (
@@ -185,7 +188,9 @@ class TestCargoFactory:
             == unloading_event_completion_time
         )
         assert (
-            cargo.delivery_history.handling_events[1].carrier_movement.id
+            cargo.delivery_history.handling_events[
+                1
+            ].carrier_movement.entity_id
             == unloading_carrier_movement_id
         )
         assert (

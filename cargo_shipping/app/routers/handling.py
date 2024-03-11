@@ -1,20 +1,28 @@
+"""API methods for adding handling events."""
+
 from fastapi import APIRouter
 
 from cargo_shipping.app.models import HandlingEventRequest
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
 from cargo_shipping.domain.model.handling.handling_event import (
-    HandlingActivity,
+    HandlingEventTypes,
 )
 from cargo_shipping.domain.model.handling.handling_event_factory import (
     HandlingEventFactory,
 )
 from cargo_shipping.domain.model.location.location import Location
-from cargo_shipping.domain.services.loading_service import LoadingService
-from cargo_shipping.domain.services.unloading_service import UnLoadingService
-from cargo_shipping.infrastructure.persistence import (
+from cargo_shipping.domain.services.loading_service import (
+    LoadingService,
+    LoadingServiceConfig,
+)
+from cargo_shipping.domain.services.unloading_service import (
+    UnLoadingService,
+    UnloadingServiceConfig,
+)
+from cargo_shipping.infrastructure.persistence import database
+from cargo_shipping.infrastructure.persistence.repositories import (
     cargo_repository,
     carrier_movement_repository,
-    database,
 )
 
 router = APIRouter(
@@ -45,21 +53,25 @@ unloading_service = UnLoadingService(
 
 @router.post("/", status_code=201)
 async def add_handling_event(request: HandlingEventRequest):
-    match request.handling_activity:
-        case HandlingActivity.LOADING:
+    """Add handling event (either LOADING or UNLOADING)."""
+
+    match request.handling_event_type:
+        case HandlingEventTypes.LOADING:
             return loading_service.execute(
-                request.tracking_id,
-                Location(
-                    request.departure_location.code,
-                    request.departure_location.name,
-                ),
-                Location(
-                    request.arrival_location.code,
-                    request.arrival_location.name,
-                ),
-                request.time_stamp,
+                LoadingServiceConfig(
+                    request.tracking_id,
+                    Location(
+                        request.departure_location.code,
+                        request.departure_location.name,
+                    ),
+                    Location(
+                        request.arrival_location.code,
+                        request.arrival_location.name,
+                    ),
+                    request.time_stamp,
+                )
             )
-        case HandlingActivity.UNLOADING:
+        case HandlingEventTypes.UNLOADING:
             return unloading_service.execute(
-                request.tracking_id, request.time_stamp
+                UnloadingServiceConfig(request.tracking_id, request.time_stamp)
             )

@@ -1,20 +1,46 @@
+"""Implement Unloading Service."""
+
+from dataclasses import dataclass
 from datetime import datetime
 
+from cargo_shipping.domain.model.base.domain_service import (
+    DomainService,
+    DomainServiceConfig,
+)
 from cargo_shipping.domain.model.handling.handling_event import (
-    HandlingActivity,
+    HandlingEventTypes,
 )
 from cargo_shipping.domain.model.handling.handling_event_factory import (
     HandlingEventFactory,
+    HandlingEventFactoryConfig,
 )
-from cargo_shipping.infrastructure.persistence.cargo_repository import (
+from cargo_shipping.infrastructure.persistence.repositories.cargo_repository import (
     CargoRepository,
 )
-from cargo_shipping.infrastructure.persistence.carrier_movement_repository import (
+from cargo_shipping.infrastructure.persistence.repositories.carrier_movement_repository import (
     CarrierMovementRepository,
 )
 
 
-class UnLoadingService:
+@dataclass
+class UnloadingServiceConfig(DomainServiceConfig):
+    """
+    This class encapsulates the values needed for the Unoading Service to
+    execute a an UNLOADING Handling Event and Carrier Movement:
+    - tracking_id: a Cargo's id used to track the Cargo
+    - time_stamp: date and time when the Event ocurred
+    """
+
+    tracking_id: str
+    time_stamp: datetime
+
+
+class UnLoadingService(DomainService):
+    """
+    Loading Service is a Domain Service responsible to execute a LOADING
+    Handling Event for a determined Cargo.
+    """
+
     def __init__(
         self,
         handling_event_factory: HandlingEventFactory,
@@ -25,17 +51,17 @@ class UnLoadingService:
         self.cargo_repository = cargo_repository
         self.carrier_movement_repository = carrier_movement_repository
 
-    def execute(
-        self,
-        tracking_id: str,
-        time_stamp: datetime,
-    ) -> None:
-        cargo = self.cargo_repository.find_by_tracking_id(tracking_id)
+    def execute(self, config: UnloadingServiceConfig) -> None:
+        cargo = self.cargo_repository.find_by_tracking_id(config.tracking_id)
         carrier_movement = cargo.delivery_history.latest_carrier_movement
         handling_event = self.handling_event_factory.create(
-            carrier_movement, time_stamp, HandlingActivity.UNLOADING
+            HandlingEventFactoryConfig(
+                carrier_movement,
+                config.time_stamp,
+                HandlingEventTypes.UNLOADING,
+            )
         )
-        carrier_movement.set_arrival_time(time_stamp)
+        carrier_movement.set_arrival_time(config.time_stamp)
         cargo.delivery_history.add(handling_event)
         self.cargo_repository.save(cargo)
         self.carrier_movement_repository.save(carrier_movement)
