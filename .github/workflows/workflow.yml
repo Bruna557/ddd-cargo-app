@@ -24,7 +24,7 @@ jobs:
 
       - name: Upload coverage report to Codacy
         env:
-          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
           CODACY_ORGANIZATION_PROVIDER: 'gh'
           CODACY_USERNAME: 'Bruna557'
           CODACY_PROJECT_NAME: 'ddd-cargo-app'
