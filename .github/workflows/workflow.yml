@@ -22,6 +22,7 @@ jobs:
           pytest --cov-report term --cov=cargo_shipping tests/ --cov-report xml
 
   codacy-coverage-reporter:
+    needs: test
     runs-on: ubuntu-latest
     name: codacy-coverage-reporter
     steps:
