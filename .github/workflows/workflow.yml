@@ -1,6 +1,6 @@
-name: Cargo Shipping Workflow
+name: Codacy Coverage Reporter
 
-on: [push, pull_request]
+on: push
   jobs:
     test:
       runs-on: ubuntu-latest
