@@ -22,10 +22,10 @@ jobs:
         run: |
           pytest --cov-report term --cov=cargo_shipping tests/ --cov-report xml
 
-      - uses: actions/upload-artifact@master
-      - name: Upload coverage report
+      - name: Temporarily save coverage file
+        uses: actions/upload-artifact@v2
         with:
-          name: coverage-report
+          name: coverage-file
           path: coverage.xml
 
   codacy-coverage-reporter:
@@ -36,9 +36,10 @@ jobs:
       - uses: actions/checkout@master
       - name: Downlaod coverage report
 
-      - uses: actions/download-artifact@master
+      - name: Retrieve saved coverage file
+        uses: actions/download-artifact@v2
         with:
-          name: coverage-report
+          name: coverage.xml
           path: reports/
 
       - name: List
@@ -51,4 +52,4 @@ jobs:
         with:
           # repository > settings > secrets and variables > actions > new repository secret
           api-token: ${{ secrets.CODACY_API_TOKEN }}
-          coverage-reports: coverage.xml
+          coverage-reports: reports/coverage.xml
