@@ -4,7 +4,6 @@ Implementation of the Cargo Shipping System described in "Domain Driven Design -
 ## Code Quality
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7cfb5f6a05814a8890430aa724bd313f)](https://app.codacy.com/gh/Bruna557/ddd-cargo-app/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/7cfb5f6a05814a8890430aa724bd313f)](https://app.codacy.com/gh/Bruna557/ddd-cargo-app/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 
