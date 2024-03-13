@@ -24,11 +24,12 @@ class CargoRepository(MongoDBRepository):
     def find_by_tracking_id(self, tracking_id: str) -> Cargo:
         """Get a Cargo from the database filtering by tracking_id"""
 
-        result = MongoDBRepository.get_by_key(self, "tracking_id", tracking_id)
+        result = MongoDBRepository.get_by_key(self, "entity_id", tracking_id)
         return self.factory.create_from_dict(result)
 
     def find_by_client_id(self, client_id: str) -> List[Cargo]:
         """Get all Cargs from the database that match the provided client_id"""
+
         result = MongoDBRepository.get_by_key(self, "client_id", client_id)
         return self.factory.create_from_dict(result)
 

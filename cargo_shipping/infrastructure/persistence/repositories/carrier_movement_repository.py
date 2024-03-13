@@ -23,13 +23,13 @@ class CarrierMovementRepository(MongoDBRepository):
         result = MongoDBRepository.get_by_key(self, "entity_id", entity_id)
         return CarrierMovement(**result)
 
-    def find_by_tracking_id(self, tracking_id: str) -> CarrierMovement:
+    def find_by_entity_id(self, entity_id: str) -> CarrierMovement:
         """
-        Get a Carrier Movement from the database filtering by the tracking_id
+        Get a Carrier Movement from the database filtering by the entity_id
         of the associated Cargo
         """
 
-        result = MongoDBRepository.get_by_key(self, "tracking_id", tracking_id)
+        result = MongoDBRepository.get_by_key(self, "entity_id", entity_id)
         return CarrierMovement(**result)
 
     def find_by_departure_arrival(

@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-import mongomock
+from mongomock import MongoClient
 
 from cargo_shipping.domain.model.cargo.cargo import Cargo
 from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
@@ -36,7 +36,7 @@ class FakeCargoRepository(CargoRepository):
 
     def __init__(self) -> None:
         CargoRepository.__init__(
-            self, mongomock.MongoClient().mydb.mycollection, FakeCargoFactory()
+            self, MongoClient().mydb.mycollection, FakeCargoFactory()
         )
         self.cargos = defaultdict()
 
@@ -55,7 +55,7 @@ class FakeCarrierMovementRepository(CarrierMovementRepository):
 
     def __init__(self) -> None:
         CarrierMovementRepository.__init__(
-            self, mongomock.MongoClient().mydb.mycollection
+            self, MongoClient().mydb.mycollection
         )
         self.carrier_movements = defaultdict()
 

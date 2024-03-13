@@ -9,7 +9,7 @@ from uuid import uuid4
 def random_string():
     """Returns random string"""
 
-    return uuid4()
+    return str(uuid4())
 
 
 def random_datetime():

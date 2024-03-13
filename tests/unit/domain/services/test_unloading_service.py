@@ -1,4 +1,4 @@
-"""Test file."""
+"""Unit test."""
 
 from cargo_shipping.domain.model.cargo.cargo_factory import (
     CargoFactory,
@@ -16,7 +16,7 @@ from cargo_shipping.domain.model.handling.handling_event_factory import (
 )
 from cargo_shipping.domain.model.location.location import Location
 from cargo_shipping.domain.services.unloading_service import (
-    UnLoadingService,
+    UnloadingService,
     UnloadingServiceConfig,
 )
 from tests import utils
@@ -33,7 +33,7 @@ class TestUnLoadingService:
         handling_event_factory = HandlingEventFactory()
         cargo_repository = FakeCargoRepository()
         carrier_movement_repository = FakeCarrierMovementRepository()
-        unloading_service = UnLoadingService(
+        unloading_service = UnloadingService(
             handling_event_factory,
             cargo_repository,
             carrier_movement_repository,

@@ -29,13 +29,13 @@ class LoadingServiceConfig(DomainServiceConfig):
     """
     This class encapsulates the values needed for the Loading Service to
     execute a a LOADING Handling Event and Carrier Movement:
-    - tracking_id: a Cargo's id used to track the Cargo
+    - entity_id: a Cargo's id used to track the Cargo
     - departure_location: where the Cargo departured from
     - arrival_location: where the cargo arrived to
     - time_stamp: date and time when the Event ocurred
     """
 
-    tracking_id: str
+    entity_id: str
     departure_location: Location
     arrival_location: Location
     time_stamp: datetime
@@ -58,7 +58,7 @@ class LoadingService(DomainService):
         self.carrier_movement_repository = carrier_movement_repository
 
     def execute(self, config: DomainServiceConfig) -> None:
-        cargo = self.cargo_repository.find_by_tracking_id(config.tracking_id)
+        cargo = self.cargo_repository.find_by_tracking_id(config.entity_id)
         carrier_movement = CarrierMovement(
             config.departure_location,
             config.arrival_location,

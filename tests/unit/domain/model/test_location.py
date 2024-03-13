@@ -1,4 +1,4 @@
-"""Test file."""
+"""Unit test."""
 
 from cargo_shipping.domain.model.location.location import Location
 from tests import utils

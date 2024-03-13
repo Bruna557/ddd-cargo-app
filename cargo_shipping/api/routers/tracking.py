@@ -1,14 +1,10 @@
 """API methods for getting tracking information."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
-from cargo_shipping.domain.model.cargo.cargo_factory import CargoFactory
-from cargo_shipping.domain.model.handling.handling_event_factory import (
-    HandlingEventFactory,
-)
-from cargo_shipping.infrastructure.persistence import database
-from cargo_shipping.infrastructure.persistence.repositories import (
-    cargo_repository,
+from cargo_shipping.api.dependencies import get_cargo_repository
+from cargo_shipping.infrastructure.persistence.repositories.cargo_repository import (
+    CargoRepository,
 )
 
 router = APIRouter(
@@ -18,14 +14,11 @@ router = APIRouter(
 )
 
 
-db = database.get_database()
-handling_event_factory = HandlingEventFactory()
-cargo_factory = CargoFactory(handling_event_factory)
-repository = cargo_repository.CargoRepository(db["booking"], cargo_factory)
-
-
 @router.get("/")
-async def get_location(tracking_id: str):
+async def get_location(
+    tracking_id: str,
+    repository: CargoRepository = Depends(get_cargo_repository),
+):
     """Get the current location of a cargo."""
 
     cargo = repository.find_by_tracking_id(tracking_id)
@@ -33,7 +26,10 @@ async def get_location(tracking_id: str):
 
 
 @router.get("/history")
-async def get_history(tracking_id: str):
+async def get_history(
+    tracking_id: str,
+    repository: CargoRepository = Depends(get_cargo_repository),
+):
     """Get the history of handling events of a cargo."""
 
     cargo = repository.find_by_tracking_id(tracking_id)

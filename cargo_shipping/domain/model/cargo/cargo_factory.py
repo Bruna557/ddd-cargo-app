@@ -24,12 +24,12 @@ class CargoFactoryConfig(FactoryConfig):
     """
     This class encapsulates the values needed for the Cargo Factory to create a
     Cargo:
-    - tracking_id: a Cargo's id used to track the Cargo
+    - entity_id: a Cargo's id used to track the Cargo
     - destination: where the Cargo should be delivered to
     - deadline: the Cargo must be delivered before the deadline
     """
 
-    tracking_id: str
+    entity_id: str
     destination: Location
     deadline: datetime
 
@@ -43,7 +43,7 @@ class CargoFactory(Factory):
     def create(self, config: CargoFactoryConfig) -> Cargo:
         """This method creates a new Cargo aggregate."""
 
-        cargo = Cargo(config.tracking_id)
+        cargo = Cargo(config.entity_id)
         cargo.delivery_specification = DeliverySpecification(
             config.destination, config.deadline
         )
@@ -54,7 +54,7 @@ class CargoFactory(Factory):
 
         cargo = self.create(
             CargoFactoryConfig(
-                d["tracking_id"],
+                d["entity_id"],
                 Location(
                     d["delivery_specification"]["destination"]["code"],
                     d["delivery_specification"]["destination"]["name"],
@@ -63,7 +63,7 @@ class CargoFactory(Factory):
             )
         )
 
-        delivery_history = DeliveryHistory(d["delivery_history"]["id"])
+        delivery_history = DeliveryHistory(d["delivery_history"]["entity_id"])
         for handling_event in d["delivery_history"]["handling_events"]:
             carrier_movement = CarrierMovement(
                 Location(
@@ -83,7 +83,7 @@ class CargoFactory(Factory):
                     ],
                 ),
                 handling_event["carrier_movement"]["departure_time"],
-                handling_event["carrier_movement"]["id"],
+                handling_event["carrier_movement"]["entity_id"],
             )
             carrier_movement.set_arrival_time(
                 handling_event["carrier_movement"]["arrival_time"]
@@ -93,7 +93,7 @@ class CargoFactory(Factory):
                     HandlingEventFactoryConfig(
                         carrier_movement,
                         handling_event["completion_time"],
-                        handling_event["type"],
+                        handling_event["event_type"],
                     )
                 )
             )

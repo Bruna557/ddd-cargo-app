@@ -1,4 +1,4 @@
-"""Test file."""
+"""Unit test."""
 
 from cargo_shipping.domain.model.carrier.carrier_movement import (
     CarrierMovement,

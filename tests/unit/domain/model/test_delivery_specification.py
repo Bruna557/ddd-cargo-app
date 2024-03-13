@@ -1,4 +1,4 @@
-"""Test file."""
+"""Unit test."""
 
 from cargo_shipping.domain.model.cargo.delivery_specification import (
     DeliverySpecification,

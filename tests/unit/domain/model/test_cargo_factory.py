@@ -1,4 +1,4 @@
-"""Test file."""
+"""Unit test."""
 
 from cargo_shipping.domain.model.cargo.cargo_factory import (
     CargoFactory,
@@ -67,7 +67,7 @@ class TestCargoFactory:
         departure_time = utils.random_datetime()
         arrival_time = utils.random_datetime()
         cargo_dict = {
-            "tracking_id": tracking_id,
+            "entity_id": tracking_id,
             "delivery_specification": {
                 "destination": {
                     "code": destination_code,
@@ -76,13 +76,13 @@ class TestCargoFactory:
                 "deadline": deadline,
             },
             "delivery_history": {
-                "id": delivery_history_id,
+                "entity_id": delivery_history_id,
                 "handling_events": [
                     {
-                        "type": loading_event_type,
+                        "event_type": loading_event_type,
                         "completion_time": loading_event_completion_time,
                         "carrier_movement": {
-                            "id": loading_carrier_movement_id,
+                            "entity_id": loading_carrier_movement_id,
                             "departure_location": {
                                 "code": departure_location_code,
                                 "name": departure_location_name,
@@ -96,10 +96,10 @@ class TestCargoFactory:
                         },
                     },
                     {
-                        "type": unloading_event_type,
+                        "event_type": unloading_event_type,
                         "completion_time": unloading_event_completion_time,
                         "carrier_movement": {
-                            "id": unloading_carrier_movement_id,
+                            "entity_id": unloading_carrier_movement_id,
                             "departure_location": {
                                 "name": departure_location_name,
                                 "code": departure_location_code,

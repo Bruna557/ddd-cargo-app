@@ -27,4 +27,4 @@ class HandlingEventRequest(BaseModel):
     departure_location: LocationRequest
     arrival_location: LocationRequest
     time_stamp: datetime
-    handling_event_type: str
+    event_type: str

@@ -30,7 +30,7 @@ class HandlingEventFactoryConfig(FactoryConfig):
     loaded_onto: CarrierMovement
     time_stamp: datetime
     handling_event_type: HandlingEventTypes
-    entity_id: str = uuid4()
+    entity_id: str = str(uuid4())
 
 
 class HandlingEventFactory(Factory):

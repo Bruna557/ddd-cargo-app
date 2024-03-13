@@ -1,4 +1,4 @@
-"""Test file."""
+"""Unit test."""
 
 from cargo_shipping.domain.model.cargo.cargo import Cargo
 from cargo_shipping.domain.model.cargo.cargo_factory import (
@@ -96,7 +96,7 @@ class TestCargo:
         cargo_dict = cargo.to_dict()
 
         # 3. Assert
-        assert cargo_dict["tracking_id"] == tracking_id
+        assert cargo_dict["entity_id"] == tracking_id
         assert (
             cargo_dict["delivery_specification"]["destination"]["code"]
             == destination_code

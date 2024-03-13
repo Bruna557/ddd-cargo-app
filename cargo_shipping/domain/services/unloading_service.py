@@ -27,15 +27,15 @@ class UnloadingServiceConfig(DomainServiceConfig):
     """
     This class encapsulates the values needed for the Unoading Service to
     execute a an UNLOADING Handling Event and Carrier Movement:
-    - tracking_id: a Cargo's id used to track the Cargo
+    - entity_id: a Cargo's id used to track the Cargo
     - time_stamp: date and time when the Event ocurred
     """
 
-    tracking_id: str
+    entity_id: str
     time_stamp: datetime
 
 
-class UnLoadingService(DomainService):
+class UnloadingService(DomainService):
     """
     Loading Service is a Domain Service responsible to execute a LOADING
     Handling Event for a determined Cargo.
@@ -52,7 +52,7 @@ class UnLoadingService(DomainService):
         self.carrier_movement_repository = carrier_movement_repository
 
     def execute(self, config: UnloadingServiceConfig) -> None:
-        cargo = self.cargo_repository.find_by_tracking_id(config.tracking_id)
+        cargo = self.cargo_repository.find_by_tracking_id(config.entity_id)
         carrier_movement = cargo.delivery_history.latest_carrier_movement
         handling_event = self.handling_event_factory.create(
             HandlingEventFactoryConfig(

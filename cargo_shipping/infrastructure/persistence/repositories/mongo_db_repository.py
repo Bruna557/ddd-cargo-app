@@ -16,7 +16,9 @@ class MongoDBRepository(Repository):
 
     def save(self, entity: Entity) -> None:
         self.collection.update_one(
-            {"id": entity.id}, {"$set": entity.to_dict()}, upsert=True
+            {"entity_id": entity.entity_id},
+            {"$set": entity.to_dict()},
+            upsert=True,
         )
 
     def get_by_key(self, key_name: str, key: str) -> dict:
