@@ -12,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/booking?id=123",
+					"raw": "localhost:8000/booking?tracking_id=123",
 					"host": [
 						"localhost"
 					],
@@ -22,7 +22,7 @@
 					],
 					"query": [
 						{
-							"key": "id",
+							"key": "tracking_id",
 							"value": "123"
 						}
 					]
@@ -125,7 +125,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"departure_location\": {\r\n        \"code\": \"NYC\",\r\n        \"name\": \"NEW YORK CITY\"\r\n    },\r\n    \"arrival_location\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"time_stamp\": \"2024-03-07 22:22:26.836842\",\r\n    \"handling_activity\": \"LOADING\"\r\n}",
+					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"departure_location\": {\r\n        \"code\": \"NYC\",\r\n        \"name\": \"NEW YORK CITY\"\r\n    },\r\n    \"arrival_location\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"time_stamp\": \"2024-03-07 22:22:26.836842\",\r\n    \"event_type\": \"LOADING\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -158,7 +158,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"departure_location\": {\r\n        \"code\": \"NYC\",\r\n        \"name\": \"NEW YORK CITY\"\r\n    },\r\n    \"arrival_location\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"time_stamp\": \"2024-03-08 10:14:41.539671\",\r\n    \"handling_activity\": \"UNLOADING\"\r\n}",
+					"raw": "{\r\n    \"tracking_id\": \"123\",\r\n    \"departure_location\": {\r\n        \"code\": \"NYC\",\r\n        \"name\": \"NEW YORK CITY\"\r\n    },\r\n    \"arrival_location\": {\r\n        \"code\": \"POA\",\r\n        \"name\": \"PORTO ALEGRE\"\r\n    },\r\n    \"time_stamp\": \"2024-03-08 10:14:41.539671\",\r\n    \"event_type\": \"UNLOADING\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

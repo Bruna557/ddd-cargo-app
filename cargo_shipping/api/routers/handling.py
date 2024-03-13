@@ -53,5 +53,5 @@ async def add_handling_event(
             )
         case HandlingEventTypes.UNLOADING:
             return unloading_service.execute(
-                UnloadingServiceConfig(request.event_id, request.time_stamp)
+                UnloadingServiceConfig(request.tracking_id, request.time_stamp)
             )

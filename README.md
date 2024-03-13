@@ -39,6 +39,6 @@ db.booking.find()
 ## Todo
 
 - [ ] error handling
+- [ ] authentication
 - [ ] fix typing
-- [ ] configure github actions, code quality and coverage
 - [ ] open api

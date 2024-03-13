@@ -24,7 +24,7 @@ def get_db() -> database:
 def get_handling_event_factory() -> HandlingEventFactory:
     """Returns a Handling Event Factory."""
 
-    return HandlingEventFactory
+    return HandlingEventFactory()
 
 
 def get_cargo_factory() -> CargoFactory:
